@@ -14,6 +14,7 @@ import UserDetails from './Components/Users/UserDetails';
 import PendingPartners from './Components/Partners/PendingPartners';
 import Partners from './Components/Partners/Partners';
 import PartnerDetails from './Components/Partners/PartnerDetails';
+import TripsOthers from './Components/Trips&others/Trips&others';
 
 function App() {
   let routers = createBrowserRouter([
@@ -33,6 +34,8 @@ function App() {
         { path: "/users", element:<Users/>},
         { path: "/pendingPartners", element:<PendingPartners/>},
         { path: "/partners", element:<Partners/>},
+        { path: "/trips", element:<TripsOthers/>},
+        { path: "/booking", element:<Partners/>},
         { path: "/partnerDetails", element:<PartnerDetails/>},
         { path: "/blockedPartners", element:<PendingPartners/>},
         { path: "/dashboard", element:<Dashboard/>},

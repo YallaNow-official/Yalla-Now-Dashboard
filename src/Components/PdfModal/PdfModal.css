@@ -1,0 +1,36 @@
+/* src/components/PdfModal.css */
+.pdf-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .pdf-modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px; /* Reduced padding */
+    width: 70%; /* Adjusted width */
+    height: 70%; /* Adjusted height */
+    max-width: 800px; /* Optional: Maximum width for large screens */
+    max-height: 600px; /* Optional: Maximum height for large screens */
+    position: relative;
+    overflow: hidden; /* Hide overflow if needed */
+  }
+  
+  .pdf-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  

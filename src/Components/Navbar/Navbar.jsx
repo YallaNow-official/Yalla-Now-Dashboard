@@ -107,6 +107,26 @@ export default function Navbar() {
                Blocked Partners
             </Link>
           </li>
+          <li>
+            <Link
+              to="/trips"
+              className={`nav-link ${
+                location.pathname === "/trips" ? "active" : ""
+              }`}
+            >
+               Trips & others
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/Booking"
+              className={`nav-link ${
+                location.pathname === "/booking" ? "active" : ""
+              }`}
+            >
+              Booking
+            </Link>
+          </li>
         </ul>
       </div>
 
