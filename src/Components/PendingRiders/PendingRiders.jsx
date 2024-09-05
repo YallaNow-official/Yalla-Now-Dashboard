@@ -72,10 +72,11 @@ export default function PendingRiders() {
 
   return (
     <>
+    <div className="users     mt-5 ">
       <div className="container d-flex align-items-center users my-5 w-75 me-5 px-0">
         <h5>Pending Riders</h5>
       </div>
-      <div className="container users w-75 me-5 bg-white p-3 mt-5 shadow-sm rounded-3">
+      <div className="container  text-center users w-75  me-5 bg-white mt-3  shadow-sm rounded-3">
         <div className="row my-1 border-bottom border-1 border-dark-subtle px-3 d-flex justify-content-center align-items-center border-dark mt-3">
           <div className="col-md-2 px-0">
             <div className="text-center">
@@ -164,6 +165,7 @@ export default function PendingRiders() {
             <h2>No Pending Riders</h2>
           </div>
         )}
+      </div>
       </div>
     </>
   );

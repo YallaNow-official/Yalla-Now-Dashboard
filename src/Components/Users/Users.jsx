@@ -7,7 +7,6 @@ import axios from "axios";
 export default function Users() {
   const [allUsers, setAllUsers] = useState([]);
   let token = localStorage.getItem("token")
-  console.log(token);
   async function allUsersData() {
     try {
       let { data } = await axios.get(
@@ -18,7 +17,6 @@ export default function Users() {
           },
         }
       );
-      console.log(data);
       setAllUsers(data);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -30,7 +28,8 @@ export default function Users() {
   }, []);
   return (
     <>
-      <div className="container users w-75 me-5 bg-white  mt-5 shadow-sm rounded-3">
+    <div className="users     mt-5 ">
+    <div className="container users w-75 me-5 bg-white  mt-5 shadow-sm rounded-3">
         <div className="row ">
           <div className="col-md-2 branshDiv">
             <span className=" py-2 ">User Name:</span>
@@ -142,6 +141,8 @@ export default function Users() {
         </div>
         <hr className="mt-2" />
       </div>
+    </div>
+      
     </>
   );
 }

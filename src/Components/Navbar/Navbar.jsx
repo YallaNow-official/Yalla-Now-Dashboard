@@ -1,22 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import mainImg from "../../Asssets/white logo-06-061.png";
+import adminImg from "../../Asssets/Ellipse 2849.png";
 import "./Navbar.css";
-
+import { FaBell, FaSignOutAlt } from "react-icons/fa"; // Import the icons
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { decodeToken, updateToken } from "../../Redux/userTokenSlice";
 export default function Navbar() {
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const userToken = useSelector((state) => state.token.userToken);
+  const decodedToken = useSelector((state) => state.token.decodedToken);
+
+  useEffect(() => {
+    // Dispatch the action to decode the token
+    dispatch(decodeToken(userToken));
+  }, [dispatch, userToken]);
+  const userName = decodedToken?.sub;
+  const role = decodedToken?.roles[0];
+
+  function Logout() {
+    dispatch(updateToken(""));
+    localStorage.removeItem("token");
+    navigate("/");
+  }
   return (
     <>
       {/* Sidebar */}
-      <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-        <div className="sidebar-header">
-          <Link className="navbar-brand" to="/home">
-            <img className="w-100" src={mainImg} alt="Logo" />
-          </Link>
-        </div>
+      <div className="sidebar open">
+        <div className="sidebar-header">{/* Removed the toggle button */}</div>
         <ul className="sidebar-nav">
+          <img src={mainImg} width={180} alt="" />
           <li>
             <Link
               to="/dashboard"
@@ -31,7 +48,10 @@ export default function Navbar() {
             <Link
               to="/riders"
               className={`nav-link ${
-                location.pathname === "/riders" || location.pathname ==="/riderDetails" ? "active" : ""
+                location.pathname === "/riders" ||
+                location.pathname === "/riderDetails"
+                  ? "active"
+                  : ""
               }`}
             >
               Riders
@@ -61,7 +81,10 @@ export default function Navbar() {
             <Link
               to="/users"
               className={`nav-link ${
-                location.pathname === "/users" || location.pathname === "/userDetails"? "active" : ""
+                location.pathname === "/users" ||
+                location.pathname === "/userDetails"
+                  ? "active"
+                  : ""
               }`}
             >
               Users
@@ -91,10 +114,13 @@ export default function Navbar() {
             <Link
               to="/partners"
               className={`nav-link ${
-                location.pathname === "/partners" ||location.pathname === "/partnerDetails" ? "active" : ""
+                location.pathname === "/partners" ||
+                location.pathname === "/partnerDetails"
+                  ? "active"
+                  : ""
               }`}
             >
-               Partners
+              Partners
             </Link>
           </li>
           <li>
@@ -104,7 +130,7 @@ export default function Navbar() {
                 location.pathname === "/blockedPartners" ? "active" : ""
               }`}
             >
-               Blocked Partners
+              Blocked Partners
             </Link>
           </li>
           <li>
@@ -114,7 +140,7 @@ export default function Navbar() {
                 location.pathname === "/trips" ? "active" : ""
               }`}
             >
-               Trips & others
+              Trips & others
             </Link>
           </li>
           <li>
@@ -130,7 +156,50 @@ export default function Navbar() {
         </ul>
       </div>
 
-     
+      {/* Top Navigation Bar */}
+      <div className="top-navbar">
+        <div className="navbar-content">
+          <Link className="navbar-brand" to="/">
+            <img className="logo" src={mainImg} alt="Logo" />
+          </Link>
+          <div className="navbar-actions">
+            <FaBell className="notification-icon" />
+            
+            <div className="image-container">
+              <img src={adminImg} className="image" alt="Profile" />
+              <h6 className="overlay-text">{userName?.charAt(0)}</h6>
+            </div>
+            <div className="d-inline-block mx-2">
+              <h6 className="">{userName}</h6>
+              <p>{role}</p>
+            </div>
+
+            <div class="dropdown mx-2">
+              <button
+                class="btn btn-white dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              ></button>
+              <ul class="dropdown-menu">
+                <li>
+                  {" "}
+                  <button
+                    onClick={() => {
+                      Logout();
+                    }}
+                    className="nav-link active carousel-pointer"
+                    aria-current="page"
+                  >
+                    <FaSignOutAlt className="logout-icon mx-3" />
+                    logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

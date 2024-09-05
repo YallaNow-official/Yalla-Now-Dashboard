@@ -15,6 +15,9 @@ import PendingPartners from './Components/Partners/PendingPartners';
 import Partners from './Components/Partners/Partners';
 import PartnerDetails from './Components/Partners/PartnerDetails';
 import TripsOthers from './Components/Trips&others/Trips&others';
+import Guard from './Components/Guard/Guard';
+import { Provider } from 'react-redux';
+import { globalStore } from "./Redux/store";
 
 function App() {
   let routers = createBrowserRouter([
@@ -23,28 +26,32 @@ function App() {
       element: <Layout />,
       children: [
         { index: "/", element: <Home /> },
-        { path: "/pendingRiders", element: <PendingRiders /> },
-        { path: "/home", element: <Home /> },
-        { path: "/riders", element: <Riders /> },
+        { path: "/pendingRiders", element:<Guard> <PendingRiders /></Guard> },
+        { path: "/home", element:<Guard><Home /></Guard>  },
+        { path: "/riders", element:<Guard><Riders /></Guard>  },
         { path: "/login", element: <Login /> },
-        { path: "/ridesHistory", element:<RidesHistory/>  },
-        { path: "/blockedRiders", element:<BlockedRiders/>  },
-        { path: "/riderDetails/:id", element:<RiderDetails/>  },
-        { path: "/userDetails", element:<UserDetails/>  },
-        { path: "/users", element:<Users/>},
-        { path: "/pendingPartners", element:<PendingPartners/>},
-        { path: "/partners", element:<Partners/>},
-        { path: "/trips", element:<TripsOthers/>},
-        { path: "/booking", element:<Partners/>},
-        { path: "/partnerDetails", element:<PartnerDetails/>},
-        { path: "/blockedPartners", element:<PendingPartners/>},
-        { path: "/dashboard", element:<Dashboard/>},
+        { path: "/ridesHistory", element:<Guard><RidesHistory/> </Guard> },
+        { path: "/blockedRiders", element:<Guard><BlockedRiders/> </Guard> },
+        { path: "/riderDetails/:id", element:<Guard><RiderDetails/></Guard>  },
+        { path: "/userDetails", element:<Guard><UserDetails/></Guard>  },
+        { path: "/users", element:<Guard><Users/></Guard>},
+        { path: "/pendingPartners", element:<Guard><PendingPartners/></Guard>},
+        { path: "/partners", element:<Guard><Partners/></Guard>},
+        { path: "/trips", element:<Guard><TripsOthers/></Guard>},
+        { path: "/booking", element:<Guard><Partners/></Guard>},
+        { path: "/partnerDetails", element:<Guard><PartnerDetails/></Guard>},
+        { path: "/blockedPartners", element:<Guard><PendingPartners/></Guard>},
+        { path: "/dashboard", element:<Guard><Dashboard/></Guard>},
     ],
     },
   ]);
   return (
-    <RouterProvider router={routers}>
-    </RouterProvider>
+
+     <Provider store={globalStore}>
+
+     <RouterProvider router={routers}>
+     </RouterProvider>
+     </Provider>
   );
 }
 

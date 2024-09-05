@@ -3,6 +3,7 @@ import axios from "axios";
 import eye from "../../Asssets/eye.png";
 import block from "../../Asssets/Block.png";
 import PdfModal from "../PdfModal/PdfModal";
+import UnBlockModal from "../UnblockModal/UnblockModal"; // Import the modal component
 import { Link } from "react-router-dom";
 
 export default function BlockedRiders() {
@@ -11,6 +12,8 @@ export default function BlockedRiders() {
   const [selectedRider, setSelectedRider] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
+  const [isUnblockModalOpen, setIsUnblockModalOpen] = useState(false);
+  const [riderToUnblock, setRiderToUnblock] = useState(null);
   const token = localStorage.getItem("token");
 
   // Show PDF modal
@@ -36,18 +39,18 @@ export default function BlockedRiders() {
           },
         }
       );
-      console.log("Fetched Blocked Riders Data:", data); // Debugging line
-      setBlockedRiders(data.data || []); // Ensure you're using the correct data structure
+      console.log("Fetched Blocked Riders Data:", data);
+      setBlockedRiders(data.data || []);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
   }
 
   // Unblock rider and update status to 0
-  async function unblockRider(driverId) {
+  async function unblockRider(driverId, note) {
     try {
       await axios.put(
-        `https://yallanow.runasp.net/api/Dashboard/UpdateDriverStatus?DriverID=${driverId}&NewStatus=0`,
+        `https://yallanow.runasp.net/api/Dashboard/UpdateDriverStatus?DriverID=${driverId}&BlockNotes=${encodeURIComponent(note)}&NewStatus=0`,
         null,
         {
           headers: {
@@ -68,29 +71,37 @@ export default function BlockedRiders() {
     getBlockedRiders();
   }, [token]);
 
-  // Handle display rider info
-  const handleDisplayInfo = (rider) => {
-    setSelectedRider(rider);
-    setIsVisible(true);
-  };
+  // Show unblock modal
+  function showUnblockModal(rider) {
+    setRiderToUnblock(rider);
+    setIsUnblockModalOpen(true);
+  }
 
-  // Handle hide rider info
-  const handleHideInfo = () => {
-    setIsVisible(false);
-    setSelectedRider(null);
-  };
+  // Close unblock modal
+  function closeUnblockModal() {
+    setIsUnblockModalOpen(false);
+    setRiderToUnblock(null);
+  }
 
   return (
     <>
       <PdfModal isOpen={isModalOpen} onClose={closeModal} pdfUrl={pdfUrl} />
-
+      <UnBlockModal
+        isOpen={isUnblockModalOpen}
+        onClose={closeUnblockModal}
+        onSubmit={(note) => {
+          if (riderToUnblock) {
+            unblockRider(riderToUnblock.driverId, note);
+          }
+        }}
+      />
+<div className="users     mt-5 ">
       <div className="container users w-75 me-5">
         <div className="row">
           <p className="mt-5 p-0">Blocked Riders</p>
           <div className="d-flex p-0 justify-content-between d-flex align-items-center">
             <div>
               <input
-                // onChange={(e) => setSearch(e.target.value)}
                 type="text"
                 className="form-control px-3 mx-0 shadow-sm w-100"
                 placeholder="Search by name"
@@ -143,47 +154,37 @@ export default function BlockedRiders() {
             <hr />
             {allBlockedRiders.map((rider) => (
               <Fragment key={rider.driverId}>
-                <div className="row px-3 text-decoration-none text-black d-flex justify-content-center align-items-center mt-3">
+                <div className="row my-1 border-bottom border-1 border-dark-subtle px-3 d-flex justify-content-center align-items-center border-dark mt-3">
                   <div className="col-md-2 px-0 text-center">
                     <button onClick={() => showModal(rider.papersFilePath)} className="btn btn-link">
-                      <i className="fas fa-file-pdf" style={{ fontSize: '40px', color: '#ff0000' }}></i>
+                      <img src={rider.imageUrl} width={70} height={70} className="rounded-circle" alt="" />
                     </button>
                   </div>
-                  <div className="col-md-2 text-center mainDiv px-0">
-                    <div>
-                      <p>{rider.userName}</p>
-                    </div>
+                  <div className="col-md-2 px-0 text-center">
+                    <p>{rider.userName}</p>
                   </div>
-                  <div className="col-md-2 text-center mainDiv px-0">
-                    <div>
-                      <p>{rider.vehicleType}</p>
-                    </div>
+                  <div className="col-md-2 px-0 text-center">
+                    <p>{rider.vehicleType}</p>
                   </div>
-                  <div className="col-md-2 text-center mainDiv px-0">
-                    <div>
-                      <p>{rider.vehicleColor}</p>
-                    </div>
+                  <div className="col-md-2 px-0 text-center">
+                    <p>{rider.vehicleColor}</p>
                   </div>
-                  <div className="col-md-2 text-center mainDiv px-0">
-                    <div>
-                      <p>{rider.phoneNumber}</p>
-                    </div>
+                  <div className="col-md-2 px-0 text-center">
+                    <p>{rider.phoneNumber}</p>
                   </div>
-                  <div className="col-md-1 text-center px-0 d-flex justify-content-center align-items-center">
-                    <div>
-                      <span className="badge primary primary1 rounded-1">
-                        {rider.vehicleType}
-                      </span>
-                    </div>
+                  <div className="col-md-1 px-0 text-center">
+                    <p className="badge primary primary1 rounded-1">
+                      {rider.vehicleType}
+                    </p>
                   </div>
-                  <div className="col-md-1 text-center px-3">
-                    <div className="d-flex justify-content-center align-items-center">
+                  <div className="col-md-1 px-0 text-center">
+                    <p>
                       <img
                         className="mx-2"
-                        onClick={() => unblockRider(rider.driverId)}
+                        onClick={() => showUnblockModal(rider)}
                         src={block}
-                        alt="unblock"
-                        style={{ cursor: 'pointer' }} // Added cursor pointer for better UX
+                        alt="block"
+                        style={{ cursor: 'pointer' }}
                       />
                       <Link to={`/riderDetails/${rider.driverId}`}>
                         <img
@@ -193,10 +194,9 @@ export default function BlockedRiders() {
                           alt="eye"
                         />
                       </Link>
-                    </div>
+                    </p>
                   </div>
                 </div>
-                <hr />
               </Fragment>
             ))}
           </>
@@ -205,14 +205,7 @@ export default function BlockedRiders() {
             <h2 className="text-center">No Blocked Riders</h2>
           </div>
         )}
-
-        {isVisible && selectedRider && (
-          <div id="details">
-            <h2>Details for {selectedRider.userName}</h2>
-            <p>Additional information here...</p>
-            <button onClick={handleHideInfo}>Close</button>
-          </div>
-        )}
+      </div>
       </div>
     </>
   );

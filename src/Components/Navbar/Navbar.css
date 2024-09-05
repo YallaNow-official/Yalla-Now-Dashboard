@@ -78,3 +78,86 @@
 .nav-link.active {
   background-color: #faf1f1bc  ;
 }
+/* Navbar.css */
+
+/* Top Navigation Bar */
+.top-navbar {
+  position: fixed;
+  top: 0;
+  left: 190px; /* Adjust to match sidebar width */
+  right: 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  z-index: 1100; /* Ensure it is above the sidebar */
+  padding: 0.5rem 1rem;
+}
+
+.top-navbar .navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.top-navbar .logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.top-navbar .logo {
+  height: 40px; /* Adjust logo size as needed */
+}
+
+.top-navbar .navbar-actions {
+  display: flex;
+  align-items: center;
+}
+
+.top-navbar .notification-icon {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.top-navbar .logout-link {
+  text-decoration: none;
+  color: #007bff; /* Adjust color as needed */
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.top-navbar .logout-icon {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.top-navbar .logout-link:hover {
+  text-decoration: underline;
+}
+
+/* Adjust main content area to avoid overlap with top navbar */
+.main-content {
+  margin-top: 56px; /* Adjust based on top navbar height */
+  margin-left: 190px; /* Adjust based on sidebar width */
+}
+
+.image-container {
+  position: relative;
+  display: inline-block; /* Allows the container to wrap around the image */
+}
+
+.image {
+  display: block; /* Removes extra space below the image */
+}
+
+.overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centers the text */
+  color: black; /* Text color */
+  font-size: 1.5rem; /* Adjust the size of the text */
+  border-radius: 50%; /* Optional: Makes the background round */
+  padding: 0.5rem; /* Optional: Adds some padding around the text */
+}

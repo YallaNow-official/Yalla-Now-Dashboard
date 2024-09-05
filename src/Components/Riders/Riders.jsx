@@ -1,28 +1,87 @@
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 import eye from "../../Asssets/eye.png";
+import avatar from "../../Asssets/Image.png";
 import block from "../../Asssets/Block.png";
 import { Link } from "react-router-dom";
 import PdfModal from "../PdfModal/PdfModal";
+import FormModal from "../FormModal/FormModal";
+import BlockModal from "../BlockModal/BlockModal"; // Import the new BlockModal
 
 export default function Riders() {
   const [search, setSearch] = useState("");
   const [allRiders, setAllRiders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
-  const token = localStorage.getItem("token");
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
+  const [blockRiderId, setBlockRiderId] = useState(null); // To store the rider ID to be blocked
+  const [token] = useState(localStorage.getItem("token"));
 
   // Show PDF modal
   function showModal(url) {
     setPdfUrl(url);
-    setIsModalOpen(true);
+    setIsPdfModalOpen(true);
   }
 
   // Close PDF modal
-  function closeModal() {
-    setIsModalOpen(false);
+  function closePdfModal() {
+    setIsPdfModalOpen(false);
     setPdfUrl(null);
+  }
+
+  // Show Form modal
+  function openFormModal() {
+    setIsFormModalOpen(true);
+  }
+
+  // Close Form modal
+  function closeFormModal() {
+    setIsFormModalOpen(false);
+  }
+
+  // Show Block modal
+  function openBlockModal(driverId) {
+    setBlockRiderId(driverId);
+    setIsBlockModalOpen(true);
+  }
+
+  // Close Block modal
+  function closeBlockModal() {
+    setIsBlockModalOpen(false);
+    setBlockRiderId(null); // Clear the rider ID
+  }
+
+  // Handle form submission
+  function handleFormSubmit(km) {
+    console.log("Km submitted:", km);
+    // Handle the km submission here, e.g., update state or call an API
+    closeFormModal(); // Optionally close the modal after submission
+  }
+
+  // Handle block submission
+  async function handleBlockSubmit(notes) {
+    if (blockRiderId) {
+      try {
+        await axios.put(
+          `https://yallanow.runasp.net/api/Dashboard/UpdateDriverStatus?DriverID=${blockRiderId}&BlockNotes=${encodeURIComponent(notes)}&NewStatus=3`,
+          null,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("Rider blocked with notes:", notes);
+        fetchRiders(); // Refresh the rider list
+        closeBlockModal(); // Close the modal after submission
+        alert('Rider blocked successfully!');
+      } catch (err) {
+        console.error('Error blocking rider:', err.response ? err.response.data : err);
+        alert('Failed to block rider!');
+      }
+    }
   }
 
   // Fetch rider data from API
@@ -45,51 +104,43 @@ export default function Riders() {
     }
   }
 
-  // Update rider status
-  async function updateRiderStatus(driverId, newStatus) {
-    try {
-      await axios.put(
-        `https://yallanow.runasp.net/api/Dashboard/UpdateDriverStatus?DriverID=${driverId}&NewStatus=${newStatus}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(`Rider status updated to ${newStatus}`);
-      fetchRiders(); // Refresh the rider list
-      if (newStatus === 3) {
-        alert('Rider blocked successfully!');
-      }
-    } catch (err) {
-      console.error('Error updating rider status:', err.response ? err.response.data : err);
-      alert('Failed to update rider status!');
-    }
-  }
-
-  // Block rider
-  function handleBlockRider(driverId) {
-    updateRiderStatus(driverId, 3); // Block rider with status 3
-  }
-
   useEffect(() => {
     fetchRiders();
   }, [token]);
 
   return (
     <>
-      <PdfModal isOpen={isModalOpen} onClose={closeModal} pdfUrl={pdfUrl} />
-      <div className="container d-flex align-items-center users my-5 w-75 me-5 px-0">
-        <h5>Riders</h5>
-        <input
-          onChange={(e) => setSearch(e.target.value)}
-          type="text"
-          className="form-control rounded-2 px-3 mx-0 shadow-sm"
-          placeholder="Search by name"
-        />
+      {/* PDF Modal */}
+      <PdfModal isOpen={isPdfModalOpen} onClose={closePdfModal} pdfUrl={pdfUrl} />
+
+      {/* Form Modal */}
+      <FormModal isOpen={isFormModalOpen} onClose={closeFormModal} onSubmit={handleFormSubmit} />
+
+      {/* Block Modal */}
+      <BlockModal isOpen={isBlockModalOpen} onClose={closeBlockModal} onSubmit={handleBlockSubmit} />
+
+      <div className="container users w-75 me-5 mt-5 rounded-3">
+        <div className="row ">
+          <h5 className="mt-5 p-0">Riders</h5>
+          <div className="d-flex p-0 justify-content-between d-flex align-items-center">
+            <div>
+              <input
+                onChange={(e) => setSearch(e.target.value)}
+                type="text"
+                className="form-control rounded-2 px-3 mx-0 shadow-sm"
+                placeholder="Search by name"
+              />
+            </div>
+            <div className="p-4">
+              <button onClick={openFormModal} className="btn btn-danger main border-0">
+                Change Km
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="container users w-75 me-5 bg-white p-3 mt-5 shadow-sm rounded-3">
+
+      <div className="container text-center users w-75 me-5 bg-white mt-3 shadow-sm rounded-3">
         <div className="row my-1 border-bottom border-1 border-dark-subtle px-3 d-flex justify-content-center align-items-center border-dark mt-3">
           <div className="col-md-2 px-0 text-center">
             <p>Image</p>
@@ -113,6 +164,7 @@ export default function Riders() {
             <p>Action</p>
           </div>
         </div>
+
         {loading ? (
           <div>Loading...</div>
         ) : allRiders.length > 0 ? (
@@ -127,7 +179,7 @@ export default function Riders() {
                 <div className="row my-1 border-bottom border-1 border-dark-subtle px-3 d-flex justify-content-center align-items-center border-dark mt-3">
                   <div className="col-md-2 px-0 text-center">
                     <button onClick={() => showModal(rider.papersFilePath)} className="btn btn-link">
-                      <i className="fas fa-file-pdf" style={{ fontSize: '40px', color: '#ff0000' }}></i>
+                      <img src={rider.imageUrl} width={70} height={70} className="rounded-circle" alt="" />
                     </button>
                   </div>
                   <div className="col-md-2 px-0 text-center">
@@ -151,7 +203,7 @@ export default function Riders() {
                     <p>
                       <img
                         className="mx-2"
-                        onClick={() => handleBlockRider(rider.driverId)} // Pass driverId
+                        onClick={() => openBlockModal(rider.driverId)} // Open block modal
                         src={block}
                         alt="block"
                         style={{ cursor: 'pointer' }}
@@ -167,11 +219,10 @@ export default function Riders() {
                     </p>
                   </div>
                 </div>
-                <hr />
               </Fragment>
             ))
         ) : (
-          <div>
+          <div className="text-center">
             <h2>No Riders Available</h2>
           </div>
         )}
