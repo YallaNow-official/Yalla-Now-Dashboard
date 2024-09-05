@@ -96,6 +96,7 @@ export default function Riders() {
           },
         }
       );
+
       setAllRiders(data.data || []);
     } catch (err) {
       console.error('Error fetching rider data:', err.response ? err.response.data : err);
@@ -118,7 +119,7 @@ export default function Riders() {
 
       {/* Block Modal */}
       <BlockModal isOpen={isBlockModalOpen} onClose={closeBlockModal} onSubmit={handleBlockSubmit} />
-
+      <div className="users     mt-5 ">
       <div className="container users w-75 me-5 mt-5 rounded-3">
         <div className="row ">
           <h5 className="mt-5 p-0">Riders</h5>
@@ -138,6 +139,7 @@ export default function Riders() {
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       <div className="container text-center users w-75 me-5 bg-white mt-3 shadow-sm rounded-3">

@@ -5,6 +5,7 @@ import group1 from "../../Asssets/Frame58.png";
 import wallet from "../../Asssets/Frame 59.png";
 import eye from "../../Asssets/eye2.png";
 import ellipce from "../../Asssets/Ellipse 758.png";
+import offline from "../../Asssets/Ellipse758.png";
 import ellipce1 from "../../Asssets/Ellipse759.png";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -126,6 +127,7 @@ export default function RiderDetails() {
           },
         }
       );
+
       setRiderDetails(data);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -155,16 +157,23 @@ export default function RiderDetails() {
         onClose={() => setIsEditBalanceModalOpen(false)}
         onSubmit={handleBalanceUpdate}
       />
+      <div className="users pt-5    mt-5 ">
       <div className="container d-flex align-items-center users my-5 w-75 me-5 px-0 ">
         <span>RiderDetails</span>
         <div className="d-flex align-items-center">
+        {riderDetails?.riderDetails?.status === false ? <div>
+          <img className="ms-3 mx-1 p-2" src={offline} alt="" />
+          <span>offline</span>
+          </div>:<div>
           <img className="ms-3 mx-1 p-2" src={ellipce} alt="" />
           <span>Online</span>
+          </div>}
+          
           <img className="ms-3 mx-1 p-2" src={ellipce1} alt="" />
-          <span>1000</span>
+          <span>{riderDetails?.riderDetails?.totalKilos} KM</span>
         </div>
       </div>
-
+      </div>
       <div className="container users w-75 me-5 px-0 ">
         <div className="row my-1">
           <div className="col-md-3 mainUser ">

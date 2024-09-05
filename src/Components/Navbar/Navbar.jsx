@@ -174,14 +174,14 @@ export default function Navbar() {
               <p>{role}</p>
             </div>
 
-            <div class="dropdown mx-2">
+            <div className="dropdown mx-2">
               <button
-                class="btn btn-white dropdown-toggle"
+                className="btn btn-white dropdown-toggle"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               ></button>
-              <ul class="dropdown-menu">
+              <ul className="dropdown-menu">
                 <li>
                   {" "}
                   <button
