@@ -14,7 +14,7 @@ export default function TripsOthers() {
   };
   return (
     <>
-      <div className="container   users w-75  me-5 mt-5 rounded-3">
+      <div className="container pt-5  users w-75  me-5 mt-5 rounded-3">
         <div className="row ">
           <h5 className="mt-5  p-0">Tours & Trips & Offers</h5>
           <div className="d-flex  p-0 justify-content-between d-flex align-items-center">

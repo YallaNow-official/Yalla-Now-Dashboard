@@ -72,7 +72,7 @@ export default function PendingRiders() {
 
   return (
     <>
-    <div className="users     mt-5 ">
+    <div className="users   pt-5  mt-5 ">
       <div className="container d-flex align-items-center users my-5 w-75 me-5 px-0">
         <h5>Pending Riders</h5>
       </div>

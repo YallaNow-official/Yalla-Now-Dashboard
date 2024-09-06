@@ -3,7 +3,7 @@ export default function PendingPartners() {
 
   return (
     <>
-    <div className="users     mt-5 ">
+    <div className="users  pt-5   mt-5 ">
     <div className="container users w-75 me-5 px-0 mt-5 rounded-3">
     <h4>Pending Partners</h4>
     </div>

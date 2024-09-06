@@ -95,7 +95,7 @@ export default function BlockedRiders() {
           }
         }}
       />
-<div className="users     mt-5 ">
+<div className="users pt-5    mt-5 ">
       <div className="container users w-75 me-5">
         <div className="row">
           <p className="mt-5 p-0">Blocked Riders</p>

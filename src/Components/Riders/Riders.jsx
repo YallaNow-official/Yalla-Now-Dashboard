@@ -168,7 +168,7 @@ export default function Riders() {
         </div>
 
         {loading ? (
-          <div>Loading...</div>
+          <div>Loading...   <i className="fas fa-spinner fa-spin"></i></div>
         ) : allRiders.length > 0 ? (
           allRiders
             .filter(rider =>
@@ -178,11 +178,11 @@ export default function Riders() {
             )
             .map(rider => (
               <Fragment key={rider.driverId}>
-                <div className="row my-1 border-bottom border-1 border-dark-subtle px-3 d-flex justify-content-center align-items-center border-dark mt-3">
+                <div className="row my-1 py-3 border-bottom border-1 border-dark-subtle px-3 d-flex justify-content-center align-items-center border-dark mt-3">
                   <div className="col-md-2 px-0 text-center">
-                    <button onClick={() => showModal(rider.papersFilePath)} className="btn btn-link">
+                    {/* <button onClick={() => showModal(rider.papersFilePath)} className="btn btn-link"> */}
                       <img src={rider.imageUrl} width={70} height={70} className="rounded-circle" alt="" />
-                    </button>
+                    {/* </button> */}
                   </div>
                   <div className="col-md-2 px-0 text-center">
                     <p>{rider.userName}</p>
