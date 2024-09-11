@@ -30,7 +30,7 @@ const BlockModal = ({ isOpen, onClose, onSubmit }) => {
             <Form>
               <div className="form-group">
                 <label htmlFor="note">Block</label>
-                <p>Are you sure you want to block this rider?</p>
+                <p>Are you sure you want to block this person ?</p>
                 <Field
                   type="text"
                   id="note"

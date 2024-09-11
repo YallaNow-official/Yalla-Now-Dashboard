@@ -18,6 +18,9 @@ import TripsOthers from './Components/Trips&others/Trips&others';
 import Guard from './Components/Guard/Guard';
 import { Provider } from 'react-redux';
 import { globalStore } from "./Redux/store";
+import BlockedPartners from './Components/Partners/BlockedPartners';
+import Offers from './Components/Offers/Offers';
+import AddOffer from './Components/Offers/AddOffer';
 
 function App() {
   let routers = createBrowserRouter([
@@ -39,13 +42,15 @@ function App() {
         { path: "/partners", element:<Guard><Partners/></Guard>},
         { path: "/trips", element:<Guard><TripsOthers/></Guard>},
         { path: "/booking", element:<Guard><Partners/></Guard>},
-        { path: "/partnerDetails", element:<Guard><PartnerDetails/></Guard>},
-        { path: "/blockedPartners", element:<Guard><PendingPartners/></Guard>},
+        { path: "/offers", element:<Offers/>},
+        { path: "/addOffer", element:<AddOffer/>},
+        { path: "/partnerDetails/:id", element:<Guard><PartnerDetails/></Guard>},
+        { path: "/blockedPartners", element:<Guard><BlockedPartners/></Guard>},
         { path: "/dashboard", element:<Guard><Dashboard/></Guard>},
     ],
     },
   ]);
-  return (
+  return (  
 
      <Provider store={globalStore}>
 
