@@ -4,6 +4,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 import './index.css';
+import './toast.css';
+
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

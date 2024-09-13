@@ -1,4 +1,7 @@
+import React from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify'; // Import ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import the toast styles
 import './App.css';
 import Home from './Components/Home/Home';
 import Layout from './Components/Layout/Layout';
@@ -29,34 +32,44 @@ function App() {
       element: <Layout />,
       children: [
         { index: "/", element: <Home /> },
-        { path: "/pendingRiders", element:<Guard> <PendingRiders /></Guard> },
-        { path: "/home", element:<Guard><Home /></Guard>  },
-        { path: "/riders", element:<Guard><Riders /></Guard>  },
+        { path: "/pendingRiders", element: <Guard><PendingRiders /></Guard> },
+        { path: "/home", element: <Guard><Home /></Guard> },
+        { path: "/riders", element: <Guard><Riders /></Guard> },
         { path: "/login", element: <Login /> },
-        { path: "/ridesHistory", element:<Guard><RidesHistory/> </Guard> },
-        { path: "/blockedRiders", element:<Guard><BlockedRiders/> </Guard> },
-        { path: "/riderDetails/:id", element:<Guard><RiderDetails/></Guard>  },
-        { path: "/userDetails", element:<Guard><UserDetails/></Guard>  },
-        { path: "/users", element:<Guard><Users/></Guard>},
-        { path: "/pendingPartners", element:<Guard><PendingPartners/></Guard>},
-        { path: "/partners", element:<Guard><Partners/></Guard>},
-        { path: "/trips", element:<Guard><TripsOthers/></Guard>},
-        { path: "/booking", element:<Guard><Partners/></Guard>},
-        { path: "/offers", element:<Offers/>},
-        { path: "/addOffer", element:<AddOffer/>},
-        { path: "/partnerDetails/:id", element:<Guard><PartnerDetails/></Guard>},
-        { path: "/blockedPartners", element:<Guard><BlockedPartners/></Guard>},
-        { path: "/dashboard", element:<Guard><Dashboard/></Guard>},
-    ],
+        { path: "/ridesHistory", element: <Guard><RidesHistory /></Guard> },
+        { path: "/blockedRiders", element: <Guard><BlockedRiders /></Guard> },
+        { path: "/riderDetails/:id", element: <Guard><RiderDetails /></Guard> },
+        { path: "/userDetails", element: <Guard><UserDetails /></Guard> },
+        { path: "/users", element: <Guard><Users /></Guard> },
+        { path: "/pendingPartners", element: <Guard><PendingPartners /></Guard> },
+        { path: "/partners", element: <Guard><Partners /></Guard> },
+        { path: "/trips", element: <Guard><TripsOthers /></Guard> },
+        { path: "/booking", element: <Guard><Partners /></Guard> },
+        { path: "/offers", element: <Offers /> },
+        { path: "/addOffer", element: <AddOffer /> },
+        { path: "/partnerDetails/:id", element: <Guard><PartnerDetails /></Guard> },
+        { path: "/blockedPartners", element: <Guard><BlockedPartners /></Guard> },
+        { path: "/dashboard", element: <Guard><Dashboard /></Guard> },
+      ],
     },
   ]);
-  return (  
 
-     <Provider store={globalStore}>
-
-     <RouterProvider router={routers}>
-     </RouterProvider>
-     </Provider>
+  return (
+    <Provider store={globalStore}>
+      <RouterProvider router={routers} />
+      <ToastContainer
+        position="top-center" // Center the toast at the top
+        autoClose={5000} // Duration before auto-close
+        hideProgressBar={false} // Show progress bar
+        newestOnTop={false} // Append newest toast on top
+        closeOnClick // Close on click
+        rtl={false} // Right-to-left support
+        pauseOnFocusLoss // Pause on focus loss
+        draggable // Allow dragging
+        pauseOnHover // Pause on hover
+        theme="light" // Light or dark theme
+      />
+    </Provider>
   );
 }
 

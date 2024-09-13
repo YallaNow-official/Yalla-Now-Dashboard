@@ -9,7 +9,7 @@ const ScooterModal = ({ isOpen, onClose, images }) => {
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
-    <div className="scooter-modal-overlay mt-5" onClick={onClose}>
+    <div className="scooter-modal-overlay" onClick={onClose}>
       <div
         className="scooter-modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -18,10 +18,10 @@ const ScooterModal = ({ isOpen, onClose, images }) => {
           <FaTimes />
         </button>
         <div id="carouselExample" className="carousel slide">
-          <div className="carousel-inner">
+          <div className="carousel-inner h-100">
             {images.map((img, index) => (
               <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                <img src={img} width={400} height={400} className="d-block w-100" alt={`Slide ${index}`} tabIndex="-1" />
+                <img  className="w-100 h-100" src={img} alt={`Slide ${index}`} />
               </div>
             ))}
           </div>

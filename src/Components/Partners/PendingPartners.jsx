@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import FormData from 'form-data';
+import { toast } from 'react-toastify';
 
 export default function PendingPartners() {
   const [allPendingPartners, setPendingPartners] = useState([]);
@@ -19,7 +20,6 @@ export default function PendingPartners() {
           },
         }
       );
-      console.log('Pending Partners Data:', data);
       setPendingPartners(data.data || []);
     } catch (err) {
       console.error('Error fetching pending Partners data:', err.response ? err.response.data : err);
@@ -53,18 +53,16 @@ export default function PendingPartners() {
       allPendingPartnersData();
       
       if (newStatus === 1) {
-        alert('Partner accepted successfully!');
+        toast.success("Partner successfully Accepted!");
       } else if (newStatus === 2) {
-        alert('Partner rejected successfully!');
+        toast.success("Partner successfully Rejected!");
       }
     } catch (err) {
       if (err.response && err.response.status === 404) {
-        console.error('Partner not found:', err.response.data);
+        toast.error('Partner not found:', err.response.data);
       } else {
-        console.error('Error updating partner status:', err.response ? err.response.data : err);
-      }
       alert('Failed to update partner status!');
-    }
+    }}
   }
   
   // Handle accept partner

@@ -39,7 +39,6 @@ const Home = () => {
       setIsLoading(false);
       localStorage.setItem("token", data.token);
       navigate('/users')
-      console.log(data);
     } catch (err) {
       setIsLoading(false);
   

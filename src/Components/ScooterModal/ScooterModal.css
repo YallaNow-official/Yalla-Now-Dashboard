@@ -1,34 +1,66 @@
 /* ScooterModal.css */
+
 .scooter-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 1050; /* Ensure it appears on top of other content */
 }
 
 .scooter-modal-content {
   background: white;
   border-radius: 8px;
+  padding: 20px;
+  max-width: 600px; /* Adjust the maximum width as needed */
+  width: 90%; /* Adjust the width to be responsive */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
-  padding: 15px;
-  max-width: 90%;
-  max-height: 90%;
 }
 
 .scooter-modal-close {
   position: absolute;
   top: 10px;
   right: 10px;
-  border: none;
   background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #000;
   cursor: pointer;
+  z-index: 1060; /* Ensure the close button is above other content */
 }
 
-.carousel-inner . .carousel .scooter-modal-content slide img:focus {
-  outline: none; 
+.carousel-inner img {
+  width: 100%; /* Ensures image covers the width of the carousel */
+  max-width: 100%; /* Keeps image from exceeding carousel width */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%; /* Adjust the width of the control buttons */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.5); /* Dark background for visibility */
+  border-radius: 50%; /* Rounded icons */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
 }

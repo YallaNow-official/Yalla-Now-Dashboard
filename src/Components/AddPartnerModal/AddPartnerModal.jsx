@@ -5,6 +5,7 @@ import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import "./AddPartnerModal.css";
+import { toast } from "react-toastify";
 
 // Define the validation schema
 const validationSchema = Yup.object({
@@ -21,13 +22,13 @@ const validationSchema = Yup.object({
 
 const AddPartnerModal = ({ isOpen, onClose }) => {
   const [token] = useState(localStorage.getItem("token"));
+  const [serverErrors, setServerErrors] = useState({});
 
   if (!isOpen) return null;
 
   // Define the function to handle form submission
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
-      // Extract partnerId from the form values
       const { partnerId, ...data } = values;
 
       await axios.post(
@@ -42,26 +43,42 @@ const AddPartnerModal = ({ isOpen, onClose }) => {
         }
       );
 
-      alert("User created successfully!");
+      toast.success("User Created successfully!");
       onClose(); // Close the modal after successful submission
     } catch (err) {
-      console.error(
-        "Error creating user:",
-        err.response ? err.response.data : err
-      );
-      alert("Failed to create user!");
+      if (err.response && err.response.data) {
+        const apiErrors = err.response.data;
+
+        // Map API errors to Formik field names
+        const formattedErrors = apiErrors.reduce((acc, error) => {
+          if (error.code === "PasswordRequiresDigit") {
+            acc.password = "Password must have at least one digit ('0'-'9').";
+          } else if (error.code === "PasswordRequiresUpper") {
+            acc.password = "Password must have at least one uppercase ('A'-'Z').";
+          }
+          // Add more mappings if needed
+          return acc;
+        }, {});
+
+        setServerErrors(formattedErrors);
+        setErrors(formattedErrors);
+      } else {
+        toast.error("Failed to create user!");
+      }
+    } finally {
+      setSubmitting(false); // Allow form submission state to reset
     }
   };
 
   return ReactDOM.createPortal(
-    <div className="form-modal-overlay mt-5 " onClick={onClose}>
+    <div className="form-modal-overlay" onClick={onClose}>
       <div className="form-modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="form-modal-close" onClick={onClose}>
           <FaTimes />
         </button>
         <Formik
           initialValues={{
-            partnerId: "", // Add initial value for partnerId
+            partnerId: "",
             firstName: "",
             lastName: "",
             email: "",
@@ -72,15 +89,15 @@ const AddPartnerModal = ({ isOpen, onClose }) => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ errors, touched }) => (
-            <Form className="mt-5 pt-3">
-              <div className="form-group ">
+          {({ errors, touched, isSubmitting }) => (
+            <Form>
+              <div className="form-group">
                 <label htmlFor="partnerId">Partner ID</label>
                 <Field
                   type="text"
                   id="partnerId"
                   name="partnerId"
-                  className="form-control"
+                  className={`form-control ${errors.partnerId && touched.partnerId ? 'is-invalid' : ''}`}
                 />
                 {errors.partnerId && touched.partnerId ? (
                   <div className="error">{errors.partnerId}</div>
@@ -92,7 +109,7 @@ const AddPartnerModal = ({ isOpen, onClose }) => {
                   type="text"
                   id="firstName"
                   name="firstName"
-                  className="form-control"
+                  className={`form-control ${errors.firstName && touched.firstName ? 'is-invalid' : ''}`}
                 />
                 {errors.firstName && touched.firstName ? (
                   <div className="error">{errors.firstName}</div>
@@ -104,7 +121,7 @@ const AddPartnerModal = ({ isOpen, onClose }) => {
                   type="text"
                   id="lastName"
                   name="lastName"
-                  className="form-control"
+                  className={`form-control ${errors.lastName && touched.lastName ? 'is-invalid' : ''}`}
                 />
                 {errors.lastName && touched.lastName ? (
                   <div className="error">{errors.lastName}</div>
@@ -116,7 +133,7 @@ const AddPartnerModal = ({ isOpen, onClose }) => {
                   type="email"
                   id="email"
                   name="email"
-                  className="form-control"
+                  className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}
                 />
                 {errors.email && touched.email ? (
                   <div className="error">{errors.email}</div>
@@ -128,7 +145,7 @@ const AddPartnerModal = ({ isOpen, onClose }) => {
                   type="password"
                   id="password"
                   name="password"
-                  className="form-control"
+                  className={`form-control ${errors.password && touched.password ? 'is-invalid' : ''}`}
                 />
                 {errors.password && touched.password ? (
                   <div className="error">{errors.password}</div>
@@ -140,7 +157,7 @@ const AddPartnerModal = ({ isOpen, onClose }) => {
                   type="text"
                   id="phoneNumber"
                   name="phoneNumber"
-                  className="form-control"
+                  className={`form-control ${errors.phoneNumber && touched.phoneNumber ? 'is-invalid' : ''}`}
                 />
                 {errors.phoneNumber && touched.phoneNumber ? (
                   <div className="error">{errors.phoneNumber}</div>
@@ -152,7 +169,7 @@ const AddPartnerModal = ({ isOpen, onClose }) => {
                   type="text"
                   id="gender"
                   name="gender"
-                  className="form-control"
+                  className={`form-control ${errors.gender && touched.gender ? 'is-invalid' : ''}`}
                 />
                 {errors.gender && touched.gender ? (
                   <div className="error">{errors.gender}</div>
@@ -166,8 +183,8 @@ const AddPartnerModal = ({ isOpen, onClose }) => {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-danger main px-4">
-                  Create User
+                <button type="submit" className="btn btn-danger main px-4" disabled={isSubmitting}>
+                  {isSubmitting ? "Submitting..." : "Create User"}
                 </button>
               </div>
             </Form>

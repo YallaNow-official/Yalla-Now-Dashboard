@@ -6,7 +6,8 @@ import block from "../../Asssets/Block.png";
 import { Link } from "react-router-dom";
 import PdfModal from "../PdfModal/PdfModal";
 import FormModal from "../FormModal/FormModal";
-import BlockModal from "../BlockModal/BlockModal"; // Import the new BlockModal
+import BlockModal from "../BlockModal/BlockModal";
+import { toast } from "react-toastify";
 
 export default function Riders() {
   const [search, setSearch] = useState("");
@@ -18,6 +19,11 @@ export default function Riders() {
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
   const [blockRiderId, setBlockRiderId] = useState(null); // To store the rider ID to be blocked
   const [token] = useState(localStorage.getItem("token"));
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Show PDF modal
   function showModal(url) {
@@ -55,7 +61,6 @@ export default function Riders() {
 
   // Handle form submission
   function handleFormSubmit(km) {
-    console.log("Km submitted:", km);
     // Handle the km submission here, e.g., update state or call an API
     closeFormModal(); // Optionally close the modal after submission
   }
@@ -73,13 +78,13 @@ export default function Riders() {
             },
           }
         );
-        console.log("Rider blocked with notes:", notes);
         fetchRiders(); // Refresh the rider list
         closeBlockModal(); // Close the modal after submission
-        alert('Rider blocked successfully!');
+        toast.success('Rider blocked successfully!')
+
       } catch (err) {
         console.error('Error blocking rider:', err.response ? err.response.data : err);
-        alert('Failed to block rider!');
+        toast.error('Error blocking rider:', err.response ? err.response.data : err)
       }
     }
   }
@@ -89,7 +94,7 @@ export default function Riders() {
     setLoading(true);
     try {
       const { data } = await axios.get(
-        'https://yallanow.runasp.net/api/Dashboard/AllDrivers?pageNumber=1&pageSize=10',
+        `https://yallanow.runasp.net/api/Dashboard/AllDrivers?pageNumber=${currentPage}&pageSize=${pageSize}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -98,8 +103,10 @@ export default function Riders() {
       );
 
       setAllRiders(data.data || []);
+      console.log(data);
+      setTotalPages(Math.ceil(data.totalCount )); // Update total pages
     } catch (err) {
-      console.error('Error fetching rider data:', err.response ? err.response.data : err);
+      toast.error('Error fetching rider data:', err.response ? err.response.data : err)
     } finally {
       setLoading(false);
     }
@@ -107,7 +114,18 @@ export default function Riders() {
 
   useEffect(() => {
     fetchRiders();
-  }, [token]);
+  }, [currentPage, pageSize, token]);
+
+  // Handle page change
+  function handlePageChange(page) {
+    setCurrentPage(page);
+  }
+
+  // Handle page size change
+  function handlePageSizeChange(e) {
+    setPageSize(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page on page size change
+  }
 
   return (
     <>
@@ -119,27 +137,28 @@ export default function Riders() {
 
       {/* Block Modal */}
       <BlockModal isOpen={isBlockModalOpen} onClose={closeBlockModal} onSubmit={handleBlockSubmit} />
-      <div className="users     mt-5 ">
-      <div className="container users w-75 me-5 mt-5 rounded-3">
-        <div className="row ">
-          <h5 className="mt-5 p-0">Riders</h5>
-          <div className="d-flex p-0 justify-content-between d-flex align-items-center">
-            <div>
-              <input
-                onChange={(e) => setSearch(e.target.value)}
-                type="text"
-                className="form-control rounded-2 px-3 mx-0 shadow-sm"
-                placeholder="Search by name"
-              />
+
+      <div className="users mt-5">
+        <div className="container users w-75 me-5 mt-5 rounded-3">
+          <div className="row">
+            <h5 className="mt-5 p-0">Riders</h5>
+            <div className="d-flex p-0 justify-content-between d-flex align-items-center">
+              <div>
+                <input
+                  onChange={(e) => setSearch(e.target.value)}
+                  type="text"
+                  className="form-control rounded-2 px-3 mx-0 shadow-sm"
+                  placeholder="Search by name"
+                />
+              </div>
+              {/* <div className="p-4">
+                <button onClick={openFormModal} className="btn btn-danger main border-0">
+                  Change Km
+                </button>
+              </div> */}
             </div>
-            {/* <div className="p-4">
-              <button onClick={openFormModal} className="btn btn-danger main border-0">
-                Change Km
-              </button>
-            </div> */}
           </div>
         </div>
-      </div>
       </div>
 
       <div className="container text-center users w-75 me-5 bg-white mt-3 shadow-sm rounded-3">
@@ -168,7 +187,7 @@ export default function Riders() {
         </div>
 
         {loading ? (
-          <div>Loading...   <i className="fas fa-spinner fa-spin"></i></div>
+          <div>Loading... <i className="fas fa-spinner fa-spin"></i></div>
         ) : allRiders.length > 0 ? (
           allRiders
             .filter(rider =>
@@ -228,7 +247,37 @@ export default function Riders() {
             <h2>No Riders Available</h2>
           </div>
         )}
+      <div className="pagination-controls d-flex justify-content-between align-items-center px-3 py-2">
+        <div className="d-flex align-items-center">
+          <label className="me-2">Page Size:</label>
+          <select value={pageSize} onChange={handlePageSizeChange} className="form-select">
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
+
+        <div>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            className="btn btn-secondary me-2"
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="btn btn-secondary ms-2"
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
+      </div>
+
     </>
   );
 }

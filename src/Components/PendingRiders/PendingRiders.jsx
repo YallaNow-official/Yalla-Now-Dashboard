@@ -18,7 +18,6 @@ export default function PendingRiders() {
           },
         }
       );
-      console.log('Pending Riders Data:', data);
       setPendingRiders(data.data || []);
     } catch (err) {
       console.error('Error fetching pending riders data:', err.response ? err.response.data : err);
@@ -39,7 +38,6 @@ export default function PendingRiders() {
           },
         }
       );
-      console.log(`Rider status updated to ${newStatus}`);
       allPendingRidersData();
       if (newStatus === 1) {
         alert('Rider accepted successfully!');

@@ -14,6 +14,7 @@ import PdfModal from "../PdfModal/PdfModal";
 import BlockModal from "../BlockModal/BlockModal";
 import EditBalanceModal from "../EditBalanceModal/EditBalanceModal";
 import ScooterModal from "../ScooterModal/ScooterModal"; // Import the ScooterModal component
+import { toast } from "react-toastify";
 
 export default function RiderDetails() {
   let navigate = useNavigate();
@@ -93,7 +94,7 @@ export default function RiderDetails() {
       );
 
       await getRiderData(); // Refresh rider data
-      alert("Wallet balance updated successfully!");
+      toast.success("Wallet balance updated successfully!!");
     } catch (err) {
       console.error("Error updating wallet balance:", err);
       alert("Failed to update wallet balance!");
@@ -118,14 +119,14 @@ export default function RiderDetails() {
         console.log("Rider blocked with notes:", notes);
         getRiderData(); // Refresh the rider list
         closeBlockModal(); // Close the modal after submission
-        alert("Rider blocked successfully!");
+        toast.success("Rider blocked successfully!");
+
         navigate("/riders");
       } catch (err) {
-        console.error(
+        toast.error(
           "Error blocking rider:",
           err.response ? err.response.data : err
         );
-        alert("Failed to block rider!");
       }
     }
   }
@@ -145,7 +146,10 @@ export default function RiderDetails() {
 
       setRiderDetails(data);
     } catch (err) {
-      console.error("Error fetching data:", err);
+      toast.error(
+        "Error fetching data:",
+        err.response ? err.response.data : err
+      );
     } finally {
       setLoading(false); // Set loading to false after fetching data
     }
@@ -180,45 +184,40 @@ export default function RiderDetails() {
       <div className="users pt-5 mt-5">
         <div className="container  users my-5  w-75 me-5 px-0">
           <div className="d-flex align-items-center justify-content-between">
-       
-       <div className="d-flex justify-content-center align-items-center">
-       <h5 className=" mt-2">RiderDetails</h5>
-          <div className="d-flex align-items-center">
-            {riderDetails?.riderDetails?.status === false ? (
-              <>
-                <img className="ms-3 mx-1  " src={offline} alt="" />
-                <span>Blocked</span>
-              </>
-            ) : (
-              <>
-                <img className="ms-3 mx-1 " src={ellipce} alt="" />
-                <span>Online</span>
-              </>
-            )}
+            <div className="d-flex justify-content-center align-items-center">
+              <h5 className=" mt-2">RiderDetails</h5>
+              <div className="d-flex align-items-center">
+                {riderDetails?.riderDetails?.status === false ? (
+                  <>
+                    <img className="ms-3 mx-1  " src={offline} alt="" />
+                    <span>Blocked</span>
+                  </>
+                ) : (
+                  <>
+                    <img className="ms-3 mx-1 " src={ellipce} alt="" />
+                    <span>Online</span>
+                  </>
+                )}
 
-            <img className="ms-3 mx-1 " src={ellipce1} alt="" />
-            <span>{riderDetails?.riderDetails?.totalKilos} KM</span>
+                <img className="ms-3 mx-1 " src={ellipce1} alt="" />
+                <span>{riderDetails?.riderDetails?.totalKilos} KM</span>
+              </div>
+            </div>
+            <div>
+              <div
+                onClick={() =>
+                  showModal(riderDetails?.riderDetails?.riderPapers)
+                }
+                style={{ cursor: "pointer" }}
+                className=" bg-white rounded-4  d-flex justify-content-center align-items-center p-2"
+              >
+                <img className="mx-3" src={pdfbutton} alt="" />
+                <h6 className="mx-3">Rider details</h6>
+              </div>
+            </div>
           </div>
-       </div>
-       <div>
-        <div
-         onClick={() =>
-          showModal(riderDetails?.riderDetails?.riderPapers)
-        }
-        style={{ cursor: "pointer" }}
-
-         className=" bg-white rounded-4  d-flex justify-content-center align-items-center p-2">
-        <img className ="mx-3" src={pdfbutton} alt="" />
-          <h6 className="mx-3">Rider details</h6>
-        
-        
-        </div>
-       </div>
-       </div> 
         </div>
       </div>
-
-
 
       {riderDetails?.riderDetails ? (
         <div className="container users w-75 me-5 px-0">
@@ -346,14 +345,13 @@ export default function RiderDetails() {
           <>
             <div className="row my-1 border-bottom border-1 border-dark-subtle px-3 d-flex justify-content-center align-items-center border-dark mt-3">
               <div className="col-md-2 py-2 px-0">
-               
-                  <img
-                    src={riderDetails?.riderDetails?.imageUrl}
-                    className="rounded-circle"
-                    width={80}
-                    height={80}
-                    alt="RiderImage"
-                  />
+                <img
+                  src={riderDetails?.riderDetails?.imageUrl}
+                  className="rounded-circle"
+                  width={80}
+                  height={80}
+                  alt="RiderImage"
+                />
               </div>
               <div className="col-md-2 py-2 px-0">
                 <div>

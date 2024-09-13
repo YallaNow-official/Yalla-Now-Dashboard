@@ -1,0 +1,11 @@
+.Toastify__toast-container {
+    z-index: 9999; /* Ensure toast is on top of other elements */
+  }
+  
+  .Toastify__toast--success {
+    background-color: #28a745; /* Green for success */
+  }
+  
+  .Toastify__toast--error {
+    background-color: #dc3545; /* Red for error */
+  }

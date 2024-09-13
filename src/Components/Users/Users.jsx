@@ -23,9 +23,9 @@ export default function Users() {
     }
   }
 
-  useEffect(() => {
-    allUsersData();
-  }, []);
+  // useEffect(() => {
+  //   allUsersData();
+  // }, []);
   return (
     <>
     <div className="users   pt-5  mt-5 ">
