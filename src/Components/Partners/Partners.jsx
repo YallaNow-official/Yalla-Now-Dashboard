@@ -112,9 +112,9 @@ export default function Partners() {
       );
 
       setAllPartners(data.data || []);
-      console.log(data.data);
+      console.log(data);
       
-      setTotalPages(Math.ceil(data.totalCount)); // Update total pages
+      setTotalPages(Math.ceil(data.totalCount / pageSize)); // Update total pages
     } catch (err) {
       console.error(
         "Error fetching Partner data:",

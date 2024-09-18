@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import avatar from "../../Asssets/Image.png";
 import block from "../../Asssets/Block.png";
 import axios from "axios";
@@ -49,7 +49,7 @@ const navigate = useNavigate()
           }
         );
 
-        getPartnerData(); // Refresh the Partner data
+        fetchPartnerData(); // Refresh the Partner data
         closeBlockModal(); // Close the modal after submission
         alert('Partner blocked successfully!');
         navigate('/blockedPartners')
@@ -59,32 +59,50 @@ const navigate = useNavigate()
       }
     }
   }
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
 
-
-  async function getPartnerData() {
+  const fetchPartnerData = useCallback(async () => {
     setLoading(true);
     try {
-      let { data } = await axios.get(
-        `https://yallanow.runasp.net/api/Dashboard/PartnerDetails?partnerId=${id}&pageNumber=1&pageSize=10`,
+      const response = await axios.get(
+        `https://yallanow.runasp.net/api/Dashboard/PartnerDetails?partnerId=${id}&pageNumber=${currentPage}&pageSize=${pageSize}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-console.log(data);
-
+      const data = response.data;
       setPartnerDetails(data);
-    } catch (err) {
-      console.error("Error fetching data:", err);
+
+      // Calculate total pages based on totalCount
+      const totalCount = data?.ordersHistory?.totalCount || 0;
+      setTotalPages(Math.ceil(totalCount / pageSize));
+    } catch (error) {
+      console.error("Error fetching partner data:", error);
     } finally {
-      setLoading(false); // Set loading to false after fetching data
+      setLoading(false);
     }
-  }
+  }, [id, currentPage, pageSize, token]);
+
+
+
 
   useEffect(() => {
-    getPartnerData();
-  }, [id, token]);
+    fetchPartnerData();
+  }, [fetchPartnerData]);
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handlePageSizeChange = (e) => {
+    setPageSize(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when page size changes
+  };
 
   return (
     <>
@@ -322,8 +340,48 @@ console.log(data);
                   <span>EGP 200.00</span>
                 </div>
               </div>
+               {/* Pagination Controls */}
+        
+             
             </div>
+   
+           {/* Pagination Controls */}
+           <div className="pagination-controls d-flex justify-content-between align-items-center px-3 py-2">
+          <div className="d-flex align-items-center">
+            <label className="me-2">Page Size:</label>
+            <select
+              value={pageSize}
+              onChange={handlePageSizeChange}
+              className="form-select"
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
           </div>
+
+          <div>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="btn btn-secondary me-2"
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="btn btn-secondary ms-2"
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+        </div>
         </>
       ) : (
         <div>No data available</div>

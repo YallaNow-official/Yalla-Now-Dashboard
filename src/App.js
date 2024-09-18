@@ -24,6 +24,7 @@ import { globalStore } from "./Redux/store";
 import BlockedPartners from './Components/Partners/BlockedPartners';
 import Offers from './Components/Offers/Offers';
 import AddOffer from './Components/Offers/AddOffer';
+import AddTrip from './Components/Trips&others/AddTrip';
 
 function App() {
   let routers = createBrowserRouter([
@@ -47,6 +48,7 @@ function App() {
         { path: "/booking", element: <Guard><Partners /></Guard> },
         { path: "/offers", element: <Offers /> },
         { path: "/addOffer", element: <AddOffer /> },
+        { path: "/addTrip", element: <AddTrip /> },
         { path: "/partnerDetails/:id", element: <Guard><PartnerDetails /></Guard> },
         { path: "/blockedPartners", element: <Guard><BlockedPartners /></Guard> },
         { path: "/dashboard", element: <Guard><Dashboard /></Guard> },

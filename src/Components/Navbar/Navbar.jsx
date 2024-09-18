@@ -154,7 +154,7 @@ export default function Navbar() {
               Offers
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               to="/trips"
               className={`nav-link ${
@@ -163,8 +163,8 @@ export default function Navbar() {
             >
               Trips & others
             </Link>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <Link
               to="/Booking"
               className={`nav-link ${
@@ -173,7 +173,7 @@ export default function Navbar() {
             >
               Booking
             </Link>
-          </li>
+          </li> */}
         </ul>
       </div>
 
